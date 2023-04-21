@@ -1,0 +1,20 @@
+function [t_env,env]=envelope(a,d,s,sd,r,fs)
+t_attack = 0:1/fs :a;
+env = t_attack/a;
+t_env = t_attack;
+
+t_decay = a+1/fs:1/fs:a+d;
+t_env = [t_env, t_decay];
+decay = 1+((t_decay-a)*((s-1)/d));
+env = [env,decay];
+
+t_sustain = a+d+1/fs : 1/fs : a+d+sd;
+t_env = [t_env, t_sustain];
+sustain = s*ones(1,length(t_sustain));
+env = [env,sustain];
+
+t_release = a+d+sd+1/fs:1/fs :a+d+sd+r;
+t_env = [t_env, t_release];
+release = s + ((t_release-(a+d+sd))*(-s/r));
+env = [env,release];
+end
